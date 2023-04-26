@@ -1,2 +1,5 @@
 # gephi_helper
-Converts JSON to CSV for use with Gephi
+This program converts JSON to CSV for use with Gephi.
+
+To run:
+% python gephiHelper.py [JSON file path]
