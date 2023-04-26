@@ -49,5 +49,8 @@ if __name__ == '__main__':
         raise SystemExit(1)
     target = Path(args.filepath)
     convertToCSV(target)
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 0c74790fd549f16b8677e014f6773676d7d89192
