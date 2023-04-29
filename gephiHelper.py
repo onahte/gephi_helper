@@ -18,29 +18,44 @@ def findFile(path):
     return path[start:]
 
 def convertToCSV(filePath):
-    with open(filePath) as file:
+    with open(filePath, 'r') as file:
         data = json.load(file)
-    cee = []
-    cer = []
+    source = []
+    target = []
 
-    for entry in data["Calls"]:
-        callee = entry["Callee"]
-        new_callee = []
-        new_callee.append(findFile(callee[1]))
-        new_callee.append(callee[2])
-        new_callee.append(callee[3])
-        cee.append(new_callee)
+    # weight = []
+    # labels = []
 
-        caller = entry["Caller"]
-        new_caller = []
-        new_caller.append(findFile(caller[1]))
-        new_caller.append(caller[2])
-        new_caller.append(caller[3])
-        cer.append(new_caller)
+    for key in data:
+        affected_calls = data[key]["AffectedCalls"]
+        app_calls = data[key]["AppCalls"]
 
-    dict = {'callee': cee, 'caller': cer}
+        for call in app_calls:
+            new_target = [findFile(call["Callee"][1]), call["Callee"][2], call["Callee"][3]]
+            new_source = [findFile(call["Caller"][1]), call["Caller"][2], call["Caller"][3]]
+            # amount = 1.0
+
+            target.append(new_target)
+            source.append(new_source)
+            # weight.append(amount)
+            # labels.append(new_target)
+
+        for call in affected_calls:
+            for cve_code in data[key]["AffectedCalls"][call]:
+                for aff_call in data[key]["AffectedCalls"][call][cve_code]:
+                    new_source = [findFile(aff_call["Callee"][1]), aff_call["Callee"][2], aff_call["Callee"][3]]
+                    new_target = cve_code  # edge from cve code to function call
+                    # amount = 3.0
+
+                    target.append(new_target)
+                    source.append(new_source)
+                    # weight.append(amount)
+                    # labels.append(new_source)
+
+    dict = {'Source': source, 'Target': target}
+    # dict = {'Source': source, 'Target': target, 'Weight': weight, 'Label': labels}
     df = pd.DataFrame(dict)
-    df.to_csv('toGarph.csv')
+    df.to_csv('toGraph.csv', index=False, header=False)
 
 if __name__ == '__main__':
     args = _parse_args()
@@ -49,8 +64,4 @@ if __name__ == '__main__':
         raise SystemExit(1)
     target = Path(args.filepath)
     convertToCSV(target)
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 0c74790fd549f16b8677e014f6773676d7d89192
