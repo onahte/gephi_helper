@@ -6,7 +6,7 @@ To run the following program:
 - ```clone``` - the following repo
 - ```run``` the following command ⬇️
 ```py
-python3 gephiHelper.py LabeledAllCalls.json
+python3 gephiHelper.py [json file path ex. ./LabeledAllCalls.json]
 ```
 - ```toGraph.csv``` newely created with the conerted data
 
